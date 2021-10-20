@@ -1,0 +1,637 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"recoveryVaultName": {
+			"type": "string",
+			"minLength": 1,
+			"metadata": {
+				"description": "Required. Name of the Azure Recovery Service Vault"
+			}
+		},
+		"cuaId": {
+			"type": "string",
+			"defaultValue": "",
+    		"metadata": {
+         		"description": "Optional. Customer Usage Attribution id (GUID). This GUID must be previously registered"
+			}
+    },
+		"location": {
+			"type": "string",
+			"defaultValue": "[resourceGroup().location]",
+			"metadata": {
+				"description": "Optional. Location for all resources."
+			}
+		},
+		"baseBackupPolicies": {
+			"type": "array",
+			"defaultValue": [
+				{
+					"name": "OnDemand",
+					"type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+                    "properties": {
+						"backupManagementType": "AzureIaasVM",
+                        "instantRPDetails": {},
+                        "schedulePolicy": {
+							"schedulePolicyType": "SimpleSchedulePolicy",
+							"scheduleRunFrequency": "Daily",
+							"scheduleRunTimes": [
+								"2021-08-24T03:00:00Z"
+							],
+							"scheduleWeeklyFrequency": 0
+						},
+						"retentionPolicy": {
+							"retentionPolicyType": "LongTermRetentionPolicy",
+							"dailySchedule": {
+								"retentionTimes": [
+									"2021-08-24T03:00:00Z"
+								],
+								"retentionDuration": {
+									"count": 7,
+									"durationType": "Days"
+								}
+						    }
+                        },
+						"instantRpRetentionRangeInDays": 2,
+                        "timeZone": "AUS Eastern Standard Time",
+                        "protectedItemsCount": 0
+                    }
+                }
+			],
+			"metadata": {
+				"description": "Perpetual Standard Backup Policy for Ondemand Backups"
+			}
+		},
+		"backupPolicies": {
+			"type": "array",
+			"defaultValue": [
+			],
+			"metadata": {
+				"description": "Optional. List of all backup policies."
+			}
+		},
+		"diagnosticLogsRetentionInDays": {
+			"type": "int",
+			"defaultValue": 365,
+			"minValue": 0,
+			"maxValue": 365,
+			"metadata": {
+				"description": "Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely."
+			}
+		},
+		"diagnosticStorageAccountId": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "Optional. Resource identifier of the Diagnostic Storage Account."
+			}
+		},
+		"workspaceId": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "Optional. Resource identifier of Log Analytics."
+			}
+		},
+		"eventHubAuthorizationRuleId": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "Optional. Resource ID of the event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to."
+			}
+		},
+		"eventHubName": {
+			"type": "string",
+			"defaultValue": "",
+			"metadata": {
+				"description": "Optional. Name of the event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category."
+			}
+		},
+		"lockForDeletion": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "Optional. Switch to lock Recovery Service Vault from deletion."
+			}
+		},
+		"tags": {
+			"type": "object",
+			"defaultValue": {
+			},
+			"metadata": {
+				"description": "Optional. Tags of the Recovery Service Vault resource."
+			}
+		},
+		"enableASR": {
+			"type": "bool",
+			"defaultValue": false
+		},
+		"baseReplicationPolicy": {
+			"type": "array",
+			"defaultValue": [
+				{
+					"name": "Gold",
+					"appConsistentFrequencyInMinutes": 60,
+					"crashConsistentFrequencyInMinutes": 5,
+					"recoveryPointHistory": 1440
+				},
+				{
+					"name": "Silver",
+					"appConsistentFrequencyInMinutes": 120,
+					"crashConsistentFrequencyInMinutes": 5,
+					"recoveryPointHistory": 1440
+				},
+				{
+					"name": "Bronze",
+					"appConsistentFrequencyInMinutes": 240,
+					"crashConsistentFrequencyInMinutes": 5,
+					"recoveryPointHistory": 1440
+				},
+				{
+					"name": "NonProd",
+					"appConsistentFrequencyInMinutes": 240,
+					"crashConsistentFrequencyInMinutes": 5,
+					"recoveryPointHistory": 1440
+				}
+			]
+		},
+		"additionalReplicationPolicy": {
+			"type": "array",
+			"defaultValue": [],
+			"metadata": {
+				"description": "Optional. Additional Replication Policy if any"
+			}
+		},
+		"sourcevNetName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+        "targetvNetName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"sourcevnetResourceGroupName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"targetvnetResourceGroupName": {
+			"type": "string",
+			"defaultValue": ""
+		}
+	},
+	"variables": {
+		"protectionPolicy": "[if(greater(length(parameters('backupPolicies')),0),concat(parameters('backupPolicies'),parameters('baseBackupPolicies')), parameters('baseBackupPolicies'))]",
+		"finalReplicationPolicy": "[if(greater(length(parameters('additionalReplicationPolicy')),0),concat(parameters('additionalReplicationPolicy'),parameters('baseReplicationPolicy')), parameters('baseReplicationPolicy'))]",
+		"diagnosticsLogs": [
+			{
+				"category": "AzureBackupReport",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "CoreAzureBackup",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AddonAzureBackupJobs",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AddonAzureBackupAlerts",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AddonAzureBackupPolicy",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AddonAzureBackupStorage",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AddonAzureBackupProtectedInstance",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryJobs",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryEvents",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryReplicatedItems",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryReplicationStats",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryRecoveryPoints",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryReplicationDataUploadRate",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			},
+			{
+				"category": "AzureSiteRecoveryProtectedDiskDataChurn",
+				"enabled": true,
+				"retentionPolicy": {
+					"days": "[parameters('diagnosticLogsRetentionInDays')]",
+					"enabled": true
+				}
+			}
+		],
+		"sourceRegion": "australiaeast",
+		"targetRegion": "australiasoutheast",
+		"sourceFabricName": "[concat(parameters('recoveryVaultName'), '/', variables('sourceRegion'),'-fabric')]",
+        "targetFabricName": "[concat(parameters('recoveryVaultName'), '/', variables('targetRegion'),'-fabric')]",
+		"sourceContainerMappingName": "[concat(variables('sourceFabricName'), '/', variables('sourceRegion'), '-container', '/', variables('sourceRegion'), '-', variables('targetRegion'))]",
+        "targetContainerMappingName": "[concat(variables('targetFabricName'), '/', variables('targetRegion'), '-container', '/', variables('targetRegion'), '-', variables('sourceRegion'))]",
+		"sourceContainerId": "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'),concat(variables('sourceRegion'),'-container'))]",
+		"targetContainerId": "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'),concat(variables('targetRegion'),'-container'))]",
+		"sourcevNetMappingName": "[concat(variables('sourceFabricName'), '/azureNetwork/', variables('sourceRegion'),'-', variables('targetRegion'),'-',parameters('sourcevNetName'))]",
+        "targetvNetMappingName": "[concat(variables('targetFabricName'), '/azureNetwork/', variables('targetRegion'),'-', variables('sourceRegion'),'-',parameters('targetvNetName'))]",
+        "sourcevNetMappingId": "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'),'AzureNetwork',concat(variables('sourceRegion'), '-', variables('targetRegion'),'-',parameters('sourcevNetName')))]"
+	},
+	"resources": [
+		{
+            "condition": "[not(empty(parameters('cuaId')))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "[concat('pid-', parameters('cuaId'))]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                    ]
+                }
+            }
+        },
+		{
+			"name": "[parameters('recoveryVaultName')]",
+			"type": "Microsoft.RecoveryServices/vaults",
+			"apiVersion": "2020-10-01",
+			"location": "[parameters('location')]",
+			"tags": "[parameters('tags')]",
+			"sku": {
+				"name": "RS0",
+				"tier": "Standard"
+			},
+			"properties": {
+			},
+			"resources": [
+				{
+					"type": "providers/locks",
+					"apiVersion": "2016-09-01",
+					"condition": "[parameters('lockForDeletion')]",
+					"name": "Microsoft.Authorization/recoveryServiceVaultDoNotDelete",
+					"dependsOn": [
+						"[concat('Microsoft.RecoveryServices/vaults/', parameters('recoveryVaultName'))]"
+					],
+					"comments": "Resource lock on Azure Recovery Service Vault",
+					"properties": {
+						"level": "CannotDelete"
+					}
+				},
+				{
+					"type": "Microsoft.RecoveryServices/vaults/providers/diagnosticsettings",
+					"apiVersion": "2017-05-01-preview",
+					"name": "[concat(parameters('recoveryVaultName'), '/Microsoft.Insights/setByPolicy')]",
+					"location": "[parameters('location')]",
+					"condition": "[or(not(empty(parameters('diagnosticStorageAccountId'))),not(empty(parameters('workspaceId'))),not(empty(parameters('eventHubAuthorizationRuleId'))),not(empty(parameters('eventHubName'))))]",
+					"dependsOn": [
+						"[concat('Microsoft.RecoveryServices/vaults/', parameters('recoveryVaultName'))]"
+					],
+					"properties": {
+						"storageAccountId": "[if(empty(parameters('diagnosticStorageAccountId')), json('null'), parameters('diagnosticStorageAccountId'))]",
+						"workspaceId": "[if(empty(parameters('workspaceId')), json('null'), parameters('workspaceId'))]",
+						"eventHubAuthorizationRuleId": "[if(empty(parameters('eventHubAuthorizationRuleId')), json('null'), parameters('eventHubAuthorizationRuleId'))]",
+						"eventHubName": "[if(empty(parameters('eventHubName')), json('null'), parameters('eventHubName'))]",
+						"logs": "[if(and(empty(parameters('diagnosticStorageAccountId')), empty(parameters('workspaceId')), empty(parameters('eventHubAuthorizationRuleId')), empty(parameters('eventHubName'))), json('null'), variables('diagnosticsLogs'))]"
+					}
+				}
+			]
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"name": "[concat('backupPolicies-', if(empty(parameters('backupPolicies')), 'dummy', copyIndex('policyCopy')))]",
+			"apiVersion": "2020-06-01",
+			"copy": {
+				"name": "policyCopy",
+				"count": "[if(not(empty(variables('protectionPolicy'))), length(variables('protectionPolicy')), 1)]"
+			},
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": [
+						{
+							"type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+							"name": "[concat(parameters('recoveryVaultName'), '/', variables('protectionPolicy')[copyIndex()].name)]",
+							"apiVersion": "2019-06-15",
+							"location": "[resourceGroup().location]",
+							"properties": "[variables('protectionPolicy')[copyIndex('policyCopy')].properties]"
+						}
+					]
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.RecoveryServices/vaults', parameters('recoveryVaultName'))]"
+			]
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"name": "[concat('replicationPolicies-', copyIndex('replicationPolicyCopy'))]",
+			"apiVersion": "2020-06-01",
+			"condition": "[parameters('enableASR')]",
+			"copy": {
+				"name": "replicationPolicyCopy",
+				"count": "[length(variables('finalReplicationPolicy'))]"
+			},
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": [
+						{
+							"type": "Microsoft.RecoveryServices/vaults/replicationPolicies",
+							"name": "[concat(parameters('recoveryVaultName'), '/', variables('finalReplicationPolicy')[copyIndex()].name)]",
+							"apiVersion": "2019-06-15",
+							"location": "[resourceGroup().location]",
+							"properties": {
+								"providerSpecificInput": {
+									"instanceType": "A2A",
+									"appConsistentFrequencyInMinutes": "[variables('finalReplicationPolicy')[copyIndex('replicationPolicyCopy')].appConsistentFrequencyInMinutes]",
+									"crashConsistentFrequencyInMinutes": "[variables('finalReplicationPolicy')[copyIndex('replicationPolicyCopy')].crashConsistentFrequencyInMinutes]",
+									"recoveryPointHistory": "[variables('finalReplicationPolicy')[copyIndex('replicationPolicyCopy')].recoveryPointHistory]",
+									"multiVmSyncStatus": "Enable"
+									}
+							}
+						}
+					]
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.RecoveryServices/vaults', parameters('recoveryVaultName'))]"
+			]
+		},
+		{
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics",
+            "apiVersion": "2018-01-10",
+            "name": "[variables('targetFabricName')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "customDetails": {
+                    "instanceType": "Azure",
+                    "location": "[variables('targetRegion')]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('recoveryVaultName'))]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics",
+            "apiVersion": "2018-01-10",
+            "name": "[variables('sourceFabricName')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "customDetails": {
+                    "instanceType": "Azure",
+                    "location": "[variables('sourceRegion')]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('recoveryVaultName'))]"
+            ]
+        },        
+		{
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers",
+            "apiVersion": "2018-01-10",
+            "name": "[concat(variables('sourceFabricName'), '/', variables('sourceRegion'), '-container')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "providerSpecificDetails": [
+                    {
+                        "instanceType": "A2A"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers",
+            "apiVersion": "2018-01-10",
+            "name": "[concat(variables('targetFabricName'), '/', variables('targetRegion'), '-container')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "providerSpecificDetails": [
+                    {
+                        "instanceType": "A2A"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'))]"
+            ]
+        },
+		{
+			"type": "Microsoft.Resources/deployments",
+			"name": "[concat('sourceContainerMappings-', copyIndex('SourceContainerMappingCopy'))]",
+			"condition": "[parameters('enableASR')]",
+			"apiVersion": "2020-06-01",
+			"copy": {
+				"name": "SourceContainerMappingCopy",
+				"count": "[length(variables('finalReplicationPolicy'))]"
+			},
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": [
+						{
+							"type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings",
+							"name": "[concat(variables('sourceContainerMappingName'),'-',variables('finalReplicationPolicy')[copyIndex('SourceContainerMappingCopy')].name)]",
+							"apiVersion": "2018-01-10",
+							"location": "[resourceGroup().location]",
+							"properties": {
+								"targetProtectionContainerId": "[variables('targetContainerId')]",
+                                "policyId": "[resourceId('Microsoft.RecoveryServices/vaults/replicationPolicies', parameters('recoveryVaultName'), variables('finalReplicationPolicy')[copyIndex('SourceContainerMappingCopy')].name)]",
+                                "providerSpecificInput": {
+									"instanceType": "ReplicationProviderSpecificContainerMappingInput"
+									}
+							}
+						}
+					]
+				}
+			},
+			"dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'))]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]",
+                "replicationPolicyCopy"
+			]
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"name": "[concat('targetContainerMappings-', copyIndex('TargeContainerMappingCopy'))]",
+			"condition": "[parameters('enableASR')]",
+			"apiVersion": "2020-06-01",
+			"copy": {
+				"name": "TargeContainerMappingCopy",
+				"count": "[length(variables('finalReplicationPolicy'))]"
+			},
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": [
+						{
+							"type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings",
+							"name": "[concat(variables('targetContainerMappingName'),'-',variables('finalReplicationPolicy')[copyIndex('TargeContainerMappingCopy')].name)]",
+							"apiVersion": "2018-01-10",
+							"location": "[resourceGroup().location]",
+							"properties": {
+								"targetProtectionContainerId": "[variables('sourceContainerId')]",
+                                "policyId": "[resourceId('Microsoft.RecoveryServices/vaults/replicationPolicies', parameters('recoveryVaultName'), variables('finalReplicationPolicy')[copyIndex('TargeContainerMappingCopy')].name)]",
+                                "providerSpecificInput": {
+									"instanceType": "ReplicationProviderSpecificContainerMappingInput"
+									}
+							}
+						}
+					]
+				}
+			},
+			"dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'))]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]",
+                "replicationPolicyCopy"
+			]
+		},
+		{
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings",
+            "apiVersion": "2018-07-10",
+            "name": "[variables('sourcevNetMappingName')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "recoveryFabricName": "[concat(variables('targetRegion'),'-fabric')]",
+                "recoveryNetworkId": "[resourceId(parameters('targetvnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('targetvNetName'))]",
+                "fabricSpecificDetails": {
+                    "instanceType": "AzureToAzure",
+                    "primaryNetworkId": "[resourceId(parameters('sourcevnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('sourcevNetName'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'))]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]"   
+            ]
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings",
+            "apiVersion": "2018-07-10",
+            "name": "[variables('targetvNetMappingName')]",
+			"condition": "[parameters('enableASR')]",
+            "properties": {
+                "recoveryFabricName": "[concat(variables('sourceRegion'),'-fabric')]",
+                "recoveryNetworkId": "[resourceId(parameters('sourcevnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('sourcevNetName'))]",
+                "fabricSpecificDetails": {
+                    "instanceType": "AzureToAzure",
+                    "primaryNetworkId": "[resourceId(parameters('targetvnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('targetvNetName'))]"
+                }
+            },
+            "dependsOn": [
+                "[variables('sourcevNetMappingId')]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('targetRegion'),'-fabric'))]",
+                "[resourceId('Microsoft.RecoveryServices/vaults/replicationFabrics',parameters('recoveryVaultName'),concat(variables('sourceRegion'),'-fabric'))]"
+				]
+        }
+	],
+	"functions": [
+	],
+	"outputs": {
+		"recoveryServicesVaultResourceId": {
+			"type": "string",
+			"value": "[resourceId('Microsoft.RecoveryServices/vaults', parameters('recoveryVaultName'))]",
+			"metadata": {
+				"description": "The Resource Id of the Recovery Services Vault."
+			}
+		},
+		"recoveryServicesVaultResourceGroup": {
+			"type": "string",
+			"value": "[resourceGroup().name]",
+			"metadata": {
+				"description": "The Resource Group the Recovery Services Vault was deployed to."
+			}
+		},
+		"recoveryServicesVaultName": {
+			"type": "string",
+			"value": "[parameters('recoveryVaultName')]",
+			"metadata": {
+				"description": "The Name of the Recovery Services Vault."
+			}
+		}
+	}
+}
