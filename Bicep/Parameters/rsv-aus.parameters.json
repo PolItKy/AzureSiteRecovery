@@ -5,37 +5,6 @@
       "rgName": {
           "value": "arav-rg-aus-asrdemo-net-01"
       },
-      "rgLocation": {
-          "value": "Australia SouthEast"
-      },
-      "vnetName": {
-        "value": "arav-vnt-aus-spknet-01"
-      },
-      "nsgName": {
-        "value": "arav-nsg-aus-spknet-01"
-      },
-      "udrName": {
-        "value": "arav-udr-aus-spknet-01"
-      },
-      "vnetAddressPrefix": {
-        "value": "10.1.0.0/16"
-      },
-      "subnetArray": {
-          "value" : [
-          {
-            "name": "webtier",
-            "addressPrefix": "10.1.0.0/24"
-          },
-          {
-            "name": "datatier",
-            "addressPrefix": "10.1.1.0/24"
-          },
-          {
-            "name": "businesslogictier",
-            "addressPrefix": "10.1.2.0/24"
-          }
-        ]
-      },
       "rsVault": {
         "value": {
           "primaryLocation": "Australia East",

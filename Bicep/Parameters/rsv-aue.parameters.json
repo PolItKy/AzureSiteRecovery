@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgName": {
+            "value": "arav-rg-aue-asrdemo-net-01"
+        },
+        "rsVault": {
+          "value": {
+            "primaryLocation": "Australia East",
+            "secondaryLocation": "Australia SouthEast",
+            "rsvName": "arav-rsv-aue-spknet-01",
+            "srcVnet": "arav-vnt-aue-spknet-01",
+            "tgtVnet": "arav-vnt-aus-spknet-01",
+            "replicationPolicies": [
+              {
+                "name": "Gold",
+                "appConsistentFrequencyInMinutes": 60,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              },
+              {
+                "name": "Silver",
+                "appConsistentFrequencyInMinutes": 120,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              },
+              {
+                "name": "Bronze",
+                "appConsistentFrequencyInMinutes": 240,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              }
+            ]
+          }
+        }
+    }
+}

@@ -7,7 +7,6 @@ param vnetAddressPrefix string
 param vnetName string
 param nsgName string
 param udrName string
-param rsVault object
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rgName
@@ -40,22 +39,6 @@ module vnet 'Modules/vnet.bicep' = {
     vnetAddressPrefix: vnetAddressPrefix
     subnetArray: subnetArray
   }
-}
-
-module rsv 'Modules/RecoveryServicesVault.bicep' = {
-  scope: rg
-  name: 'rsv-${rgName}'
-  params: {
-    primaryLocation: rsVault.primaryLocation
-    rsvName: rsVault.rsvName
-    secondaryLocation: rsVault.secondaryLocation
-    srcVnet: rsVault.srcVnet
-    tgtVnet: rsVault.tgtVnet
-    replicationPolicyArray: rsVault.replicationPolicies
-  }
-  dependsOn: [
-    vnet
-  ]
 }
 
 module nsgudrasc 'Modules/subnetnsgudrasc.bicep' = {

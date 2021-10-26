@@ -20,22 +20,42 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy Aus East
+    - name: Deploy Lz Bicep Aus East
       uses: Azure/arm-deploy@v1
       with:
         scope: subscription
         region: 'Australia East'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
-        deploymentName: 'Bicep_East'
-        template: ./Bicep/main.bicep
-        parameters: ./Bicep/Parameters/main-aue.parameters.json
+        deploymentName: 'Bicep_Lz_East'
+        template: ./Bicep/DeployLz.bicep
+        parameters: ./Bicep/Parameters/lz-aue.parameters.json
         
-    - name: Deploy Aus SouthEast
+    - name: Deploy Lz Bicep Aus SouthEast
       uses: Azure/arm-deploy@v1
       with:
         scope: subscription
         region: 'Australia SouthEast'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
-        deploymentName: 'Bicep_SouthEast'
-        template: ./Bicep/main.bicep
-        parameters: ./Bicep/Parameters/main-aus.parameters.json
+        deploymentName: 'Bicep_Lz_SouthEast'
+        template: ./Bicep/DeployLz.bicep
+        parameters: ./Bicep/Parameters/lz-aus.parameters.json
+
+    - name: Deploy ASR Bicep Aus East
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: subscription
+        region: 'Australia East'
+        subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
+        deploymentName: 'Bicep_Lz_East'
+        template: ./Bicep/ConfigureASR.bicep
+        parameters: ./Bicep/Parameters/rsv-aue.parameters.json
+        
+    - name: Deploy ASR Bicep Aus SouthEast
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: subscription
+        region: 'Australia SouthEast'
+        subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
+        deploymentName: 'Bicep_Lz_SouthEast'
+        template: ./Bicep/ConfigureASR.bicep
+        parameters: ./Bicep/Parameters/rsv-aus.parameters.json
