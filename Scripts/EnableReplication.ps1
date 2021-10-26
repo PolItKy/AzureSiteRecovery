@@ -4,47 +4,36 @@ param (
         $vmCsvPath,
         [Parameter(Mandatory=$true)]
         [string]
-        $envtlabel,
+        $primaryASRStorageAccount,
+	[Parameter(Mandatory=$true)]
+        [string]
+        $recoveryASRStorageAccount,
         [Parameter(Mandatory=$true)]
         [string]
-        $sublabel
+        $asrResourceGroup,
+	[Parameter(Mandatory=$true)]
+        [string]
+        $rsvVault,
+	[Parameter(Mandatory=$true)]
+        [string]
+        $targetVirtualNetwork
 )
-
-#Setting Subscription Label
-if ($sublabel -eq "StandardSecurity")
-{
-  $sublabel = "sts"
-}
-
-#Setting Envt Label
-if ($envtLabel -eq "Test")
-{
-  $envtLabel = "tst"
-}
-elseif ($envtLabel -eq "NonProd") {
-  $envtLabel = "npe"
-}
-elseif ($envtLabel -eq "Prod") {
-   $envtLabel = "prd"
-}
 
 #Default Variables
 $primaryRegion = "australiaeast"
-$primaryASRStorageAccount = "pptstaaue"+$envtLabel+$subLabel+"0102"
-$recoveryASRStorageAccount = "pptstaaus"+$envtLabel+$subLabel+"0102"
-$asrResourceGroup = "ppt-rg-aus-"+$envtLabel+$subLabel+"01-01-asr"
-$rsvVault = "ppt-rsv-aus-"+$envtLabel+$subLabel+"01-01"
-$targetVirtualNetwork = "ppt-vnt-aus-"+$envtLabel+$subLabel+"01-01"
+$targetRegion = "australiasoutheast"
+$primaryContinerName = "australiaeast-container"
+
+
 $primaryASRStorageAccountId = (Get-AzResource -Name $primaryASRStorageAccount).ResourceId
 $recoveryASRStorageAccountId = (Get-AzResource -Name $recoveryASRStorageAccount).ResourceId
+
 function Enable-Replication([string] $vmName, [string] $replicationPolicy,  [string] $sourceRg,  [string] $targetRg, [string] $rsvVault)
 {
   Write-output ("Enabling Replication for VM: "+$vmName)
   $Vault = Get-AzRecoveryServicesVault -Name $rsvVault
   
   $targetResourceGroupId = (Get-AzResourceGroup -Name $targetRg).ResourceId
-  
-  $primaryContinerName = "australiaeast-container"
   
   $targetVirtualNetworkId = (Get-AzResource -Name $targetVirtualNetwork).ResourceId
   
@@ -55,10 +44,8 @@ function Enable-Replication([string] $vmName, [string] $replicationPolicy,  [str
   $primaryContainer = Get-ASRProtectionContainer -Name $PrimaryContinerName -Fabric $primaryFabric
   
   ############
-    
-  $cnMapping = "australiaeast-australiasoutheast"
   
-  $primaryContainerMapping = $cnMapping + "-$replicationPolicy"
+  $primaryContainerMapping = $primaryRegion + "-" + $targetRegion + "-" + $replicationPolicy
   
   $primaryProtectionContainerMapping = Get-ASRProtectionContainerMapping -Name $primaryContainerMapping -ProtectionContainer $primaryContainer
   
@@ -101,7 +88,7 @@ function Enable-Replication([string] $vmName, [string] $replicationPolicy,  [str
   Write-output ("Triggering Site Recovery job for VM: "+$vmName)
   $job = New-AzRecoveryServicesAsrReplicationProtectedItem -AzureToAzure -Name $vmName -RecoveryVmName $vmName -ProtectionContainerMapping $primaryProtectionContainerMapping `
 		       -AzureVmId $vmDetails.ID -AzureToAzureDiskReplicationConfiguration $diskList -RecoveryResourceGroupId $TargetResourceGroupId `
-		       -RecoveryAzureSubnetName $targetSubnetName -RecoveryAzureNetworkId $targetVirtualNetworkId #-RecoveryAzureStorageAccountId $recoveryASRStorageAccountId #-LogStorageAccountId $primaryASRStorageAccountId
+		       -RecoveryAzureSubnetName $targetSubnetName -RecoveryAzureNetworkId $targetVirtualNetworkId #-RecoveryAzureStorageAccountId $recoveryASRStorageAccountId 
 
   $rc =$enableReplicationJobs.Add($job)
 
@@ -123,15 +110,12 @@ $enableReplicationJobs = New-Object System.Collections.ArrayList
 #Enable Replication for Each VM
 foreach ($vm in $vmCsv)
 { 
-  #if ($vm.vmName -eq "azpocw013")
-  #{
   Write-output ("Processing VM: "+$vm.vmName)
   $vmName = $vm.vmName
   $sourceResourceGroup = $vm.resourceGroup
   $replicationPolicy = $vm.replicationPolicy
 
   Enable-Replication -vmName $vmName -replicationPolicy $replicationPolicy -sourceRg $sourceResourceGroup  -targetRg $asrResourceGroup -rsvVault $rsvVault
-  #}
 }
 
 #Monitor Protection and Replication jobs for completion
