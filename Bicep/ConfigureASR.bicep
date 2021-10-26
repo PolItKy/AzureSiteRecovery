@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 param rsVault object
 param rgName string
 
