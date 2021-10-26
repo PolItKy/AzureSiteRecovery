@@ -4,10 +4,7 @@ param (
         $RPName,
         [Parameter(Mandatory=$true)]
         [string]
-        $envtlabel,
-        [Parameter(Mandatory=$true)]
-        [string]
-        $sublabel,
+        $rsvVault,
         [Parameter(Mandatory=$true)]
         [string]
         $mode,
@@ -27,24 +24,6 @@ function JobChecker ([object] $jb)
    return $job.state
 }
 
-#Setting Subscription Label
-if ($sublabel -like "*StandardSecurity*")
-{
-  $sublabel = "sts"
-}
-
-#Setting Envt Label
-if ($envtLabel -eq "Test")
-{
-  $envtLabel = "tst"
-}
-elseif ($envtLabel -eq "NonProd") {
-  $envtLabel = "npe"
-}
-elseif ($envtLabel -eq "Prod") {
-   $envtLabel = "prd"
-}
-
 #Setting Inverse direction for reprotection based on Direction 
 if ($direction -eq "PrimaryToRecovery")
 {
@@ -53,9 +32,6 @@ if ($direction -eq "PrimaryToRecovery")
 elseif ($direction -eq "RecoveryToPrimary") {
    $inverseDirection = "PrimaryToRecovery"   
 }
-
-#Default variables
-$rsvVault = "ppt-rsv-aus-"+$envtLabel+$subLabel+"01-01"
 
 #Setting Recovery Services Vault Context
 $Vault = Get-AzRecoveryServicesVault -Name $rsvVault
