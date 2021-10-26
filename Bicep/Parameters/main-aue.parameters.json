@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgName": {
+            "value": "arav-rg-aue-net-01"
+        },
+        "rgLocation": {
+            "value": "Australia East"
+        },
+        "vnetName": {
+          "value": "arav-vnt-aue-spknet-01"
+        },
+        "nsgName": {
+          "value": "arav-nsg-aue-spknet-01"
+        },
+        "udrName": {
+          "value": "arav-udr-aue-spknet-01"
+        },
+        "vnetAddressPrefix": {
+          "value": "10.2.0.0/16"
+        },
+        "subnetArray": {
+            "value" : [
+            {
+              "name": "webtier",
+              "addressPrefix": "10.2.0.0/24"
+            },
+            {
+              "name": "datatier",
+              "addressPrefix": "10.2.1.0/24"
+            },
+            {
+              "name": "businesslogictier",
+              "addressPrefix": "10.2.2.0/24"
+            }
+          ]
+        },
+        "rsVault": {
+          "value": {
+            "primaryLocation": "Australia East",
+            "secondaryLocation": "Australia SouthEast",
+            "rsvName": "arav-rsv-aue-spknet-01",
+            "srcVnet": "arav-vnt-aue-spknet-01",
+            "tgtVnet": "arav-vnt-aus-spknet-01",
+            "replicationPolicies": [
+              {
+                "name": "Gold",
+                "appConsistentFrequencyInMinutes": 60,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              },
+              {
+                "name": "Silver",
+                "appConsistentFrequencyInMinutes": 120,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              },
+              {
+                "name": "Bronze",
+                "appConsistentFrequencyInMinutes": 240,
+                "crashConsistentFrequencyInMinutes": 5,
+                "recoveryPointHistory": 1440
+              }
+            ]
+          }
+        }
+    }
+}

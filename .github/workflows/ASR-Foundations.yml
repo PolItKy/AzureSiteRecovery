@@ -1,1 +1,41 @@
 
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@main
+      
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy Aus East
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: subscription
+        region: 'Australia East'
+        subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
+        deploymentName: 'Bicep_East'
+        template: ./Bicep/main.bicep
+        parameters: ./Bicep/Parameters/main-aue.parameters.json
+        
+    - name: Deploy Aus SouthEast
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: subscription
+        region: 'Australia SouthEast'
+        subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
+        deploymentName: 'Bicep_SouthEast'
+        template: ./Bicep/main.bicep
+        parameters: ./Bicep/Parameters/main-aus.parameters.json

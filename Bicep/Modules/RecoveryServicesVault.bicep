@@ -1,20 +1,23 @@
 param rsvName string
 param primaryLocation string
 param secondaryLocation string
-param sourceFabricName string
-param targetFabricName string
-param sourceContainer string
-param targetContainer string
+
 param srcVnet string
 param tgtVnet string
+param replicationPolicyArray array
+
 var srcRegion = 'australiaeast'
 var tgtRegion = 'australiasoutheast'
+var sourceFabricName ='${srcRegion}-fabric'
+var targetFabricName ='${tgtRegion}-fabric'
+var sourceContainer = '${srcRegion}-container'
+var targetContainer = '${tgtRegion}-container'
 
 
 
 resource rsv 'Microsoft.RecoveryServices/vaults@2021-06-01' = {
   name: rsvName
-  location: secondaryLocation
+  location: resourceGroup().location
 }
 
 resource srcFab 'Microsoft.RecoveryServices/vaults/replicationFabrics@2021-06-01' = {
@@ -31,11 +34,11 @@ resource srcFab 'Microsoft.RecoveryServices/vaults/replicationFabrics@2021-06-01
 }
 
 resource tgtFab 'Microsoft.RecoveryServices/vaults/replicationFabrics@2021-06-01' = {
-  name: '${rsvName}/${sourceFabricName}'
+  name: '${rsvName}/${targetFabricName}'
   properties: {
       customDetails: {
         instanceType: 'Azure'
-        location: primaryLocation
+        location: secondaryLocation
       }
   }
   dependsOn: [
@@ -71,6 +74,41 @@ resource tgtCtr 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicatio
   ]
 }
 
+resource replPolicy 'Microsoft.RecoveryServices/vaults/replicationPolicies@2021-06-01' = [for policy in replicationPolicyArray: {
+  name: '${rsvName}/${policy.name}'
+  properties: {
+     providerSpecificInput: {
+       multiVmSyncStatus: 'Enable'
+       instanceType: 'A2A'
+       appConsistentFrequencyInMinutes: policy.appConsistentFrequencyInMinutes
+       crashConsistentFrequencyInMinutes: policy.crashConsistentFrequencyInMinutes
+       recoveryPointHistory: policy.recoveryPointHistory
+     }
+  }
+}]
+
+resource srcCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings@2021-06-01' = [for policy in replicationPolicyArray: {
+  name: '${rsvName}/${sourceFabricName}/${sourceContainer}/${srcRegion}-${tgtRegion}-${policy.name}'
+  properties: {
+     policyId: resourceId('Microsoft.RecoveryServices/vaults/replicationPolicies', rsvName, policy.name)
+     providerSpecificInput: {
+       instanceType: 'A2A'
+     }
+     targetProtectionContainerId: tgtCtr.id
+  }
+}]
+
+resource tgtCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings@2021-06-01' = [for policy in replicationPolicyArray: {
+  name: '${rsvName}/${targetFabricName}/${sourceContainer}/${tgtRegion}-${srcRegion}-${policy.name}'
+  properties: {
+     policyId: resourceId('Microsoft.RecoveryServices/vaults/replicationPolicies', rsvName, policy.name)
+     providerSpecificInput: {
+       instanceType: 'A2A'
+     }
+     targetProtectionContainerId: srcCtr.id
+  }
+}]
+
 resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
   name: '${rsvName}/${sourceFabricName}/azurenetworks/${srcRegion}-${tgtRegion}-${srcVnet}'
   properties: {
@@ -84,7 +122,7 @@ resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
 }
 
 resource tgtNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
-  name: '${rsvName}/${sourceFabricName}/azurenetworks/${tgtRegion}-${srcRegion}-${tgtVnet}'
+  name: '${rsvName}/${targetFabricName}/azurenetworks/${tgtRegion}-${srcRegion}-${tgtVnet}'
   properties: {
     recoveryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnet)
     recoveryFabricName: sourceFabricName
