@@ -91,6 +91,9 @@ resource replPolicy 'Microsoft.RecoveryServices/vaults/replicationPolicies@2021-
        recoveryPointHistory: policy.recoveryPointHistory
      }
   }
+  dependsOn: [
+    rsv
+  ]
 }]
 
 resource srcCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings@2021-06-01' = [for policy in replicationPolicyArray: {
@@ -102,10 +105,17 @@ resource srcCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/rep
      }
      targetProtectionContainerId: tgtCtr.id
   }
+  dependsOn: [
+    replPolicy
+    srcFab
+    tgtFab
+    srcCtr
+    tgtCtr
+  ]
 }]
 
 resource tgtCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectionContainerMappings@2021-06-01' = [for policy in replicationPolicyArray: {
-  name: '${rsvName}/${targetFabricName}/${sourceContainer}/${tgtRegion}-${srcRegion}-${policy.name}'
+  name: '${rsvName}/${targetFabricName}/${targetContainer}/${tgtRegion}-${srcRegion}-${policy.name}'
   properties: {
      policyId: resourceId('Microsoft.RecoveryServices/vaults/replicationPolicies', rsvName, policy.name)
      providerSpecificInput: {
@@ -113,6 +123,13 @@ resource tgtCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/rep
      }
      targetProtectionContainerId: srcCtr.id
   }
+  dependsOn: [
+    replPolicy
+    srcFab
+    tgtFab
+    srcCtr
+    tgtCtr
+  ]
 }]
 
 resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
@@ -125,6 +142,11 @@ resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
       instanceType: 'AzureToAzure'
     }
   }
+  dependsOn: [
+    rsv
+    srcFab
+    tgtFab
+  ]
 }
 
 resource tgtNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
@@ -137,4 +159,9 @@ resource tgtNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
       instanceType: 'AzureToAzure'
     }
   }
+  dependsOn: [
+    rsv
+    srcFab
+    tgtFab
+  ]
 }

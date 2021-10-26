@@ -42,6 +42,19 @@ module vnet 'Modules/vnet.bicep' = {
   }
 }
 
+module rsv 'Modules/RecoveryServicesVault.bicep' = {
+  scope: rg
+  name: 'rsv-${rgName}'
+  params: {
+    primaryLocation: rsVault.primaryLocation
+    rsvName: rsVault.rsvName
+    secondaryLocation: rsVault.secondaryLocation
+    srcVnet: rsVault.srcVnet
+    tgtVnet: rsVault.tgtVnet
+    replicationPolicyArray: rsVault.replicationPolicies
+  }
+}
+
 module nsgudrasc 'Modules/subnetnsgudrasc.bicep' = {
   scope: rg
   name: 'nsdudrascmodule-${rgName}'
@@ -55,18 +68,5 @@ module nsgudrasc 'Modules/subnetnsgudrasc.bicep' = {
     routeTableArray: routeTable.outputs.routeTables
     subnetArray: vnet.outputs.subnets
     vnetName: vnetName
-  }
-}
-
-module rsv 'Modules/RecoveryServicesVault.bicep' = {
-  scope: rg
-  name: 'rsv-${rgName}'
-  params: {
-    primaryLocation: rsVault.primaryLocation
-    rsvName: rsVault.rsvName
-    secondaryLocation: rsVault.secondaryLocation
-    srcVnet: rsVault.srcVnet
-    tgtVnet: rsVault.tgtVnet
-    replicationPolicyArray: rsVault.replicationPolicies
   }
 }
