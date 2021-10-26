@@ -1,5 +1,4 @@
 param stgAccName string
-param vnetId string
 
 resource storageaccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
   name: stgAccName
@@ -7,18 +6,6 @@ resource storageaccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
   kind: 'StorageV2'
   sku: {
     name: 'Premium_LRS'
-  }
-  properties: {
-     allowBlobPublicAccess: false
-     networkAcls: {
-       defaultAction: 'Allow'
-       virtualNetworkRules: [
-          {
-            id: vnetId
-            action: 'Allow'
-          }
-       ]
-     }
   }
 }
 

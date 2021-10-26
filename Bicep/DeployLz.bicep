@@ -19,7 +19,6 @@ module stg 'Modules/storageaccount.bicep' = {
   name: 'stgmodule-${rgName}'
   params: {
     stgAccName: stgAccName
-    vnetId: vnet.outputs.vnetid
   }
 }
 
