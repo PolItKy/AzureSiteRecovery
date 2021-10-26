@@ -19,7 +19,10 @@ resource rsv 'Microsoft.RecoveryServices/vaults@2021-06-01' = {
   name: rsvName
   location: resourceGroup().location
   sku:  {
-     name: 'Standard'
+     name: 'RS0'
+     tier: 'Standard'
+  }
+  properties: {
   }
 }
 
