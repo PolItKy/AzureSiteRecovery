@@ -46,7 +46,7 @@ jobs:
         scope: subscription
         region: 'Australia East'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
-        deploymentName: 'Bicep_Lz_East'
+        deploymentName: 'Bicep_ASR_East'
         template: ./Bicep/ConfigureASR.bicep
         parameters: ./Bicep/Parameters/rsv-aue.parameters.json
         
@@ -56,6 +56,6 @@ jobs:
         scope: subscription
         region: 'Australia SouthEast'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
-        deploymentName: 'Bicep_Lz_SouthEast'
+        deploymentName: 'Bicep_ASR_SouthEast'
         template: ./Bicep/ConfigureASR.bicep
         parameters: ./Bicep/Parameters/rsv-aus.parameters.json

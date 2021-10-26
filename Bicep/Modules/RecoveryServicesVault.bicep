@@ -4,6 +4,8 @@ param secondaryLocation string
 
 param srcVnet string
 param tgtVnet string
+param srcVnetRg string
+param tgtVnetRg string
 param replicationPolicyArray array
 
 var srcRegion = 'australiaeast'
@@ -138,7 +140,7 @@ resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
     recoveryNetworkId: resourceId('Microsoft.Network/virtualNetworks', tgtVnet)
     recoveryFabricName: targetFabricName
     fabricSpecificDetails: {
-      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnet)
+      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnetRg , srcVnet)
       instanceType: 'AzureToAzure'
     }
   }
@@ -155,7 +157,7 @@ resource tgtNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
     recoveryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnet)
     recoveryFabricName: sourceFabricName
     fabricSpecificDetails: {
-      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', tgtVnet)
+      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', tgtVnetRg ,tgtVnet)
       instanceType: 'AzureToAzure'
     }
   }
