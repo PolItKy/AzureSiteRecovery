@@ -8,6 +8,9 @@
       "rgLocation": {
           "value": "Australia SouthEast"
       },
+      "stgAccName": {
+        "value": "aravstaausasr01"
+      },
       "vnetName": {
         "value": "arav-vnt-aus-spknet-01"
       },

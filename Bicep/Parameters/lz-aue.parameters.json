@@ -5,6 +5,9 @@
         "rgName": {
             "value": "arav-rg-aue-asrdemo-net-01"
         },
+        "stgAccName": {
+          "value": "aravstaaueasr01"
+        },
         "rgLocation": {
             "value": "Australia East"
         },

@@ -5,16 +5,13 @@ param (
         [Parameter(Mandatory=$true)]
         [string]
         $primaryASRStorageAccount,
-	[Parameter(Mandatory=$true)]
-        [string]
-        $recoveryASRStorageAccount,
         [Parameter(Mandatory=$true)]
         [string]
         $asrResourceGroup,
-	[Parameter(Mandatory=$true)]
+	      [Parameter(Mandatory=$true)]
         [string]
         $rsvVault,
-	[Parameter(Mandatory=$true)]
+	      [Parameter(Mandatory=$true)]
         [string]
         $targetVirtualNetwork
 )
@@ -26,7 +23,6 @@ $primaryContinerName = "australiaeast-container"
 
 
 $primaryASRStorageAccountId = (Get-AzResource -Name $primaryASRStorageAccount).ResourceId
-$recoveryASRStorageAccountId = (Get-AzResource -Name $recoveryASRStorageAccount).ResourceId
 
 function Enable-Replication([string] $vmName, [string] $replicationPolicy,  [string] $sourceRg,  [string] $targetRg, [string] $rsvVault)
 {
