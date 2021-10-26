@@ -35,35 +35,6 @@
               "addressPrefix": "10.2.2.0/24"
             }
           ]
-        },
-        "rsVault": {
-          "value": {
-            "primaryLocation": "Australia East",
-            "secondaryLocation": "Australia SouthEast",
-            "rsvName": "arav-rsv-aue-spknet-01",
-            "srcVnet": "arav-vnt-aue-spknet-01",
-            "tgtVnet": "arav-vnt-aus-spknet-01",
-            "replicationPolicies": [
-              {
-                "name": "Gold",
-                "appConsistentFrequencyInMinutes": 60,
-                "crashConsistentFrequencyInMinutes": 5,
-                "recoveryPointHistory": 1440
-              },
-              {
-                "name": "Silver",
-                "appConsistentFrequencyInMinutes": 120,
-                "crashConsistentFrequencyInMinutes": 5,
-                "recoveryPointHistory": 1440
-              },
-              {
-                "name": "Bronze",
-                "appConsistentFrequencyInMinutes": 240,
-                "crashConsistentFrequencyInMinutes": 5,
-                "recoveryPointHistory": 1440
-              }
-            ]
-          }
         }
     }
 }
