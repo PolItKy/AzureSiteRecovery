@@ -18,6 +18,9 @@ var targetContainer = '${tgtRegion}-container'
 resource rsv 'Microsoft.RecoveryServices/vaults@2021-06-01' = {
   name: rsvName
   location: resourceGroup().location
+  sku:  {
+     name: 'Standard'
+  }
 }
 
 resource srcFab 'Microsoft.RecoveryServices/vaults/replicationFabrics@2021-06-01' = {
