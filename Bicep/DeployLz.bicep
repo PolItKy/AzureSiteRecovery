@@ -38,21 +38,11 @@ module vnet 'Modules/vnet.bicep' = {
     vnetName: vnetName
     vnetAddressPrefix: vnetAddressPrefix
     subnetArray: subnetArray
-  }
-}
-
-module nsgudrasc 'Modules/subnetnsgudrasc.bicep' = {
-  scope: rg
-  name: 'nsdudrascmodule-${rgName}'
-  dependsOn: [
-    vnet
-    routeTable
-    nsg
-  ]
-  params: {
     nsgIdArray: nsg.outputs.nsgIds
     routeTableArray: routeTable.outputs.routeTables
-    subnetArray: vnet.outputs.subnets
-    vnetName: vnetName
   }
+  dependsOn: [
+    nsg
+    routeTable
+  ]
 }

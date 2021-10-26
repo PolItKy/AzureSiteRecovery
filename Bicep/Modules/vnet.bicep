@@ -1,6 +1,8 @@
 param vnetName string
 param vnetAddressPrefix string
 param subnetArray array
+param nsgIdArray array
+param routeTableArray array
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
   name: vnetName
@@ -16,6 +18,12 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' = {
       properties: {
         addressPrefix: subnet.addressPrefix
         serviceEndpoints: []
+        networkSecurityGroup: {
+          id: nsgIdArray[index].resourceId
+        }
+        routeTable: {
+          id: routeTableArray[index].resourceId 
+        }
       }
     }]
   }
