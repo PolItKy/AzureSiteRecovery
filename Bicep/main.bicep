@@ -53,6 +53,9 @@ module rsv 'Modules/RecoveryServicesVault.bicep' = {
     tgtVnet: rsVault.tgtVnet
     replicationPolicyArray: rsVault.replicationPolicies
   }
+  dependsOn: [
+    vnet
+  ]
 }
 
 module nsgudrasc 'Modules/subnetnsgudrasc.bicep' = {
