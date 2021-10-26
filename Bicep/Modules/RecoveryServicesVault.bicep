@@ -137,10 +137,10 @@ resource tgtCntMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/rep
 resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
   name: '${rsvName}/${sourceFabricName}/azurenetworks/${srcRegion}-${tgtRegion}-${srcVnet}'
   properties: {
-    recoveryNetworkId: resourceId('Microsoft.Network/virtualNetworks', tgtVnet)
+    recoveryNetworkId: resourceId(tgtVnetRg, 'Microsoft.Network/virtualNetworks', tgtVnet)
     recoveryFabricName: targetFabricName
     fabricSpecificDetails: {
-      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnetRg , srcVnet)
+      primaryNetworkId: resourceId(srcVnetRg, 'Microsoft.Network/virtualNetworks' , srcVnet)
       instanceType: 'AzureToAzure'
     }
   }
@@ -154,10 +154,10 @@ resource srcNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/repl
 resource tgtNwMapping 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationNetworks/replicationNetworkMappings@2021-06-01' = {
   name: '${rsvName}/${targetFabricName}/azurenetworks/${tgtRegion}-${srcRegion}-${tgtVnet}'
   properties: {
-    recoveryNetworkId: resourceId('Microsoft.Network/virtualNetworks', srcVnet)
+    recoveryNetworkId: resourceId(srcVnetRg, 'Microsoft.Network/virtualNetworks', srcVnet)
     recoveryFabricName: sourceFabricName
     fabricSpecificDetails: {
-      primaryNetworkId: resourceId('Microsoft.Network/virtualNetworks', tgtVnetRg ,tgtVnet)
+      primaryNetworkId: resourceId(tgtVnetRg, 'Microsoft.Network/virtualNetworks', tgtVnet)
       instanceType: 'AzureToAzure'
     }
   }
