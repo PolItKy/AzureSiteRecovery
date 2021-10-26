@@ -4,10 +4,10 @@ param (
         $RPName,
         [Parameter(Mandatory=$true)]
         [string]
-        $envtlabel,
+        $rsvVault,
         [Parameter(Mandatory=$true)]
         [string]
-        $sublabel,
+        $testVnet,
         [Parameter(Mandatory=$true)]
         [string]
         $direction,
@@ -15,6 +15,7 @@ param (
         [string]
         $mode
 )
+
 function JobChecker ([object] $jb)
 {
    do {
@@ -23,35 +24,6 @@ function JobChecker ([object] $jb)
 	} while ($job.State -ne 'Succeeded' -and $job.State -ne 'Failed' -and $job.State -ne 'CompletedWithInformation')
 
    return $job.state
-}
-
-#Setting Subscription Label
-if ($sublabel -like "*StandardSecurity*")
-{
-  $sublabel = "sts"
-}
-
-#Setting Envt Label
-if ($envtLabel -eq "Test")
-{
-  $envtLabel = "tst"
-}
-elseif ($envtLabel -eq "NonProd") {
-  $envtLabel = "npe"
-}
-elseif ($envtLabel -eq "Prod") {
-   $envtLabel = "prd"
-}
-
-#Default Variables
-$rsvVault = "ppt-rsv-aus-"+$envtLabel+$subLabel+"01-01"
-
-if ($direction -eq "PrimaryToRecovery")
-{
-   $testVnet = "ppt-vnt-aus-"+$envtLabel+$subLabel+"01-02"
-}
-elseif ($direction -eq "RecoveryToPrimary") {
-   $testVnet = "ppt-vnt-aue-"+$envtLabel+$subLabel+"01-02"
 }
 
 $testVnetId = (Get-AzResource -Name $testVnet).ResourceId
