@@ -18,3 +18,9 @@ Below Azure Powershell script serves as a wrapper which does the majority of the
 https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Scripts/EnableReplication.ps1
 
 ![image](https://user-images.githubusercontent.com/86707819/139073328-8eb64b4e-311f-41ca-8417-9ea4a728bf0c.png)
+
+A github workflow to perform ASR onboarding. 
+
+https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/.github/workflows/ASR-EnableReplication.yml
+
+[![ASR-EnableReplication](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-EnableReplication.yml/badge.svg)](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-EnableReplication.yml)
