@@ -17,7 +17,7 @@ on:
         required: true
       rsvVault:
         description: 'Name of Recovery Services Vault'
-        default: 'arav-rsv-aus-net-01'
+        default: 'arav-rsv-aus-spknet-01'
         required: true
       targetVirtualNetwork:
         description: 'Name of Target Vnet'
