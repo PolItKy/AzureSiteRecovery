@@ -39,3 +39,7 @@ A github Workflow to build Landing Zone and Configure ASR is available below.
 https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/.github/workflows/ASR-LandingZones.yml
 
 [![ASR-LandingZones](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-LandingZones.yml/badge.svg)](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-LandingZones.yml)
+
+
+More details can be found here. 
+https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-architecture
