@@ -22,13 +22,15 @@ Under the hood, Recovery Services Vault needs quite a few child resources to ena
 - Replication Policies
   - Configuration that details the frequency of recovery snapshots and retention of those snapshots
 - Replication Fabrics
-  - Fabrics representing Source and Target Regions
+  - Source and Target Regions are represented as Fabrics
 - Replication Protection Containers
-  - Logical containers underneath Fabric for Source and Target regions
+  - Logical containers underneath Fabric to group Virtual Machines for Source and Target regions
 - Replication Protection Containers Mappings
-  - Associates the Protection Containers to every Replication Policy
+  - Associates the Protection Containers to Replication Policy. Ideally this has to be performed for every replication policy which we are intending to use. 
 - Replication Network and Network Mappings
-  - Maps the Source and Target Networks 
+  - Maps the Source and Target Networks and vice versa. 
+
+Note: All the above are done in a way to support Failover and Failback directions. 
 
 Code sample to configure Recovery Services Vault for ASR is below. 
 
