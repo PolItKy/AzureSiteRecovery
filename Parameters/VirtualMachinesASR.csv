@@ -1,1 +1,4 @@
-
+vmName,resourceGroup,replicationPolicy
+aravaueasr001,arav-rg-aue-asrdemo-net-01,Gold
+aravaueasr002,arav-rg-aue-asrdemo-net-01,Silver
+aravaueasr003,arav-rg-aue-asrdemo-net-01,Bronze
