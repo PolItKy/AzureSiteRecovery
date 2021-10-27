@@ -1,4 +1,4 @@
-vmName,resourceGroup,replicationPolicy
-aravaueasr001,arav-rg-aue-asrdemo-net-01,Gold
-aravaueasr002,arav-rg-aue-asrdemo-net-01,Silver
-aravaueasr003,arav-rg-aue-asrdemo-net-01,Bronze
+vmName,resourceGroup,replicationPolicy,recoveryPlan,group
+aravaueasr001,arav-rg-aue-asrdemo-net-01,Gold,ASRDemo,1
+aravaueasr002,arav-rg-aue-asrdemo-net-01,Silver,ASRDemo,2
+aravaueasr003,arav-rg-aue-asrdemo-net-01,Bronze,ASRDemo,3
