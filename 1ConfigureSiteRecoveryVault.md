@@ -1,4 +1,4 @@
-**Landing Zones for ASR**
+# Landing Zones for ASR
 
 Azure Site Recovery primarily operates on Recovery Services Vault and needs to be configured upfront before onboarding Virtual Machines into it. 
 
@@ -15,7 +15,7 @@ A simple landing zone can be deployed using Bicep
 
 https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Bicep/DeployLz.bicep
 
-**Configuring Recovery Services Vault for ASR**
+# Configuring Recovery Services Vault for ASR
 
 Under the hood, Recovery Services Vault needs quite a few child resources to enable ASR. 
 
