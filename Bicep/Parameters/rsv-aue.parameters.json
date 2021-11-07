@@ -8,7 +8,7 @@
         "rsVault": {
           "value": {
             "primaryLocation": "Australia East",
-            "secondaryLocation": "Australia SouthEast",
+            "secondaryLocation": "SouthEast Asia",
             "rsvName": "arav-rsv-aue-spknet-01",
             "srcVnet": "arav-vnt-aue-spknet-01",
             "tgtVnet": "arav-vnt-sea-spknet-01",
