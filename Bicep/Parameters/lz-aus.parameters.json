@@ -3,22 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
       "rgName": {
-          "value": "arav-rg-aus-asrdemo-net-01"
+          "value": "arav-rg-sea-asrdemo-net-01"
       },
       "rgLocation": {
-          "value": "Australia SouthEast"
+          "value": "SouthEast Asia"
       },
       "stgAccName": {
         "value": "aravstaausasr01"
       },
       "vnetName": {
-        "value": "arav-vnt-aus-spknet-01"
+        "value": "arav-vnt-sea-spknet-01"
       },
       "nsgName": {
-        "value": "arav-nsg-aus-spknet-01"
+        "value": "arav-nsg-sea-spknet-01"
       },
       "udrName": {
-        "value": "arav-udr-aus-spknet-01"
+        "value": "arav-udr-sea-spknet-01"
       },
       "vnetAddressPrefix": {
         "value": "10.1.0.0/16"

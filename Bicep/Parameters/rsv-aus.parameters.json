@@ -3,17 +3,17 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
       "rgName": {
-          "value": "arav-rg-aus-asrdemo-net-01"
+          "value": "arav-rg-sea-asrdemo-net-01"
       },
       "rsVault": {
         "value": {
           "primaryLocation": "Australia East",
-          "secondaryLocation": "Australia SouthEast",
-          "rsvName": "arav-rsv-aus-spknet-01",
+          "secondaryLocation": "SouthEast Asia",
+          "rsvName": "arav-rsv-sea-spknet-01",
           "srcVnet": "arav-vnt-aue-spknet-01",
-          "tgtVnet": "arav-vnt-aus-spknet-01",
+          "tgtVnet": "arav-vnt-sea-spknet-01",
           "srcVnetRg": "arav-rg-aue-asrdemo-net-01",
-          "tgtVnetRg": "arav-rg-aus-asrdemo-net-01",
+          "tgtVnetRg": "arav-rg-sea-asrdemo-net-01",
           "replicationPolicies": [
             {
               "name": "Gold",
