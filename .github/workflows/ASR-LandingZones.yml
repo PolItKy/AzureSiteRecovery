@@ -30,11 +30,11 @@ jobs:
         template: ./Bicep/DeployLz.bicep
         parameters: ./Bicep/Parameters/lz-aue.parameters.json
         
-    - name: Deploy Lz Bicep Aus SouthEast
+    - name: Deploy Lz Bicep SouthEast Asia
       uses: Azure/arm-deploy@v1
       with:
         scope: subscription
-        region: 'Australia SouthEast'
+        region: 'SouthEast Asia'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
         deploymentName: 'Bicep_Lz_SouthEast'
         template: ./Bicep/DeployLz.bicep
@@ -50,11 +50,11 @@ jobs:
         template: ./Bicep/ConfigureASR.bicep
         parameters: ./Bicep/Parameters/rsv-aue.parameters.json
         
-    - name: Deploy ASR Bicep Aus SouthEast
+    - name: Deploy ASR Bicep SouthEast Asia
       uses: Azure/arm-deploy@v1
       with:
         scope: subscription
-        region: 'Australia SouthEast'
+        region: 'SouthEast Asia'
         subscriptionId: '3d3c613c-3828-4c8d-bc51-8871f888c18e'
         deploymentName: 'Bicep_ASR_SouthEast'
         template: ./Bicep/ConfigureASR.bicep
