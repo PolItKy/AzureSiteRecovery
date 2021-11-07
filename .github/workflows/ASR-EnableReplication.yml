@@ -13,15 +13,15 @@ on:
         required: true
       asrResourceGroup:
         description: 'Name of ASR Resource Group'
-        default: 'arav-rg-aus-asrdemo-net-01'
+        default: 'arav-rg-sea-asrdemo-net-01'
         required: true
       rsvVault:
         description: 'Name of Recovery Services Vault'
-        default: 'arav-rsv-aus-spknet-01'
+        default: 'arav-rsv-sea-spknet-01'
         required: true
       targetVirtualNetwork:
         description: 'Name of Target Vnet'
-        default: 'arav-vnt-aus-spknet-01'
+        default: 'arav-vnt-sea-spknet-01'
         required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel

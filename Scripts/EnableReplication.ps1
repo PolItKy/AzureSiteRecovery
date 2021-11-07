@@ -18,7 +18,7 @@ param (
 
 #Default Variables
 $primaryRegion = "australiaeast"
-$targetRegion = "australiasoutheast"
+$targetRegion = "southeastasia"
 $primaryContinerName = "australiaeast-container"
 
 
