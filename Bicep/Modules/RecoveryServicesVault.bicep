@@ -9,7 +9,7 @@ param tgtVnetRg string
 param replicationPolicyArray array
 
 var srcRegion = 'australiaeast'
-var tgtRegion = 'australiasoutheast'
+var tgtRegion = 'southeastasia'
 var sourceFabricName ='${srcRegion}-fabric'
 var targetFabricName ='${tgtRegion}-fabric'
 var sourceContainer = '${srcRegion}-container'
