@@ -11,9 +11,9 @@
             "secondaryLocation": "Australia SouthEast",
             "rsvName": "arav-rsv-aue-spknet-01",
             "srcVnet": "arav-vnt-aue-spknet-01",
-            "tgtVnet": "arav-vnt-aus-spknet-01",
+            "tgtVnet": "arav-vnt-sea-spknet-01",
             "srcVnetRg": "arav-rg-aue-asrdemo-net-01",
-            "tgtVnetRg": "arav-rg-aus-asrdemo-net-01",
+            "tgtVnetRg": "arav-rg-sea-asrdemo-net-01",
             "replicationPolicies": [
               {
                 "name": "Gold",
