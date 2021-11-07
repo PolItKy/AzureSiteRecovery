@@ -36,6 +36,18 @@
           {
             "name": "businesslogictier",
             "addressPrefix": "10.1.2.0/24"
+          },
+          {
+            "name": "webtierasr",
+            "addressPrefix": "10.1.3.0/24"
+          },
+          {
+            "name": "datatierasr",
+            "addressPrefix": "10.1.4.0/24"
+          },
+          {
+            "name": "businesslogictierasr",
+            "addressPrefix": "10.1.5.0/24"
           }
         ]
       }
