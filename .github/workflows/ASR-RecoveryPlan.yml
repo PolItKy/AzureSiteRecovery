@@ -46,7 +46,7 @@ jobs:
         with:
         # Specify the Az PowerShell script here.
           inlineScript: |
-            .\Scripts\RecoveryPlanProcessing.ps1 -vmCsvPath '.\Parameters\VirtualMachinesASR.csv' -groupActionCsvPath '.\Parameters\groupActionsASR.csv' -baseTemplatePath '.\Templates\recoveryPlan.parameters.json' -armTemplateFile '.\ARM\ASRRecoveryPlan.json' -recoveryPlan ${{ github.event.inputs.recoveryPlan }}  -rsvRg ${{ github.event.inputs.rsvRg }} -rsvVault ${{ github.event.inputs.rsvVault }}
+            .\Scripts\RecoveryPlanProcessing.ps1 -vmCsvPath '.\Parameters\VirtualMachinesASR.csv' -groupActionCsvPath '.\Parameters\groupActionsASR.csv' -baseTemplatePath '.\Templates' -armTemplateFile '.\ARM\ASRRecoveryPlan.json' -recoveryPlan ${{ github.event.inputs.recoveryPlan }}  -rsvRg ${{ github.event.inputs.rsvRg }} -rsvVault ${{ github.event.inputs.rsvVault }}
           # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
           azPSVersion: latest
           # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
