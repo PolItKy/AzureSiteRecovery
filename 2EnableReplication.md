@@ -1,7 +1,7 @@
 # ASR Onboarding
 
 Some of common pain areas in ASR onboarding are,
-- Configuration such as Disks, Specification, Resource Groups can be varying for every machine.
+- Configuration such as Disks, Specification, Resource Groups can be varying for every virtual machine.
 - Lots of these details has to be supplied in form of Parameters files which can be really complex arrays/objects
 - If extensive parameters arent supplied, building logic via ARM, Bicep or Terraform to fetch from VMs can be challenging and will be complex to write
 - Maintaining Repository. Most of the foundations code comprises Recovery Services vault and teams generally do not mix up Non foundations components in it.
