@@ -9,7 +9,7 @@ on:
     inputs:
       recoveryPlan:
         description: 'Name of RecoveryPlan'
-        default: 'Gold'
+        default: 'ASRDemo'
         required: true
       rsvRg:
         description: 'Name of Recovery Services Resource Group'
