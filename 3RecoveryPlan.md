@@ -15,7 +15,7 @@ The CSV file comprising VMs and Group we used for ASR onboarding along with a CS
 
 https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Scripts/RecoveryPlanProcessing.ps1
 
-Script Logic:
+**Script Logic:**
 - Script iterates the VM CSV files for the recovery plan chosen to be processed. 
 - Identifies the number of unique groups 
 - Build the groups of VMs by referencing the Pre and Post actions in group actions CSV file. 
