@@ -1,4 +1,4 @@
 recoveryPlan|group|startAction|startActionName|startActionDescription|endAction|endActionName|endActionDescription|failoverType|failoverDirections
 ASRDemo|1|Manual|Manual|Test Action Description|Manual|Manual|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
-ASRDemo|2||||Runbook|TestASRRunbook|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
-ASRDemo|3||||Runbook|TestASRRunbook|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
+ASRDemo|2|Manual|Manual|Test Action Description|Runbook|TestASRRunbook|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
+ASRDemo|3|Manual|Manual|Test Action Description|Runbook|TestASRRunbook|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
