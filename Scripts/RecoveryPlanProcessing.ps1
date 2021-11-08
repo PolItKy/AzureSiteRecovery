@@ -10,16 +10,16 @@ param (
         $baseTemplatePath,
         [Parameter(Mandatory=$true)]
         [string]
-        $envtlabel,
-        [Parameter(Mandatory=$true)]
-        [string]
-        $sublabel,
-        [Parameter(Mandatory=$true)]
-        [string]
         $armTemplateFile,
         [Parameter(Mandatory=$true)]
         [string]
-        $recoveryPlan
+        $recoveryPlan,
+        [Parameter(Mandatory=$true)]
+        [string]
+        $rsvRg,
+	    [Parameter(Mandatory=$true)]
+        [string]
+        $rsvVault
 )
 
 function Split-StringObject ([object] $stringObject) {
@@ -37,40 +37,12 @@ $primaryRegion = "australiaeast"
 $primaryContinerName = "australiaeast-container"
 $templateName = "recoveryPlan.parameters.json"
 $arrayDelimiter = ","
-
-#Setting Subscription Label
-if ($sublabel -eq "StandardSecurity")
-{
-  $sublabel = "sts"
-}
-
-#Setting Envt Label
-if ($envtLabel -eq "Test")
-{
-  $envtLabel = "tst"
-}
-elseif ($envtLabel -eq "NonProd") {
-  $envtLabel = "npe"
-}
-elseif ($envtLabel -eq "Prod") {
-   $envtLabel = "prd"
-}
-
-#Setting Automation AccountID for Runbook based tasks in Recovery Plan
-if ($envtLabel -eq "tst")
-{
-    $automationAccountId = "/subscriptions/d08e79e9-05b2-48f6-a05f-55935de93086/resourceGroups/ppt-rg-aue-tstmgt01-01-mon/providers/Microsoft.Automation/automationAccounts/ppt-aa-aue-tstmgt01-01"
-}
-else
-{
-    $automationAccountId = "/subscriptions/3a3260d4-ea73-4ac3-94f4-0a4985479b10/resourceGroups/ppt-rg-aue-pltmgt01-01-mon/providers/Microsoft.Automation/automationAccounts/ppt-aa-aue-pltmgt01-01"
-}
-
-$rsvVault = "ppt-rsv-aus-"+$envtLabel+$subLabel+"01-01"
-$rsvRg = "ppt-rg-aus-"+$envtLabel+$subLabel+"01-01-net"
 $Vault = Get-AzRecoveryServicesVault -Name $rsvVault
 $context = Set-AzRecoveryServicesAsrVaultContext -vault $Vault
 $baseTemplate = "$baseTemplatePath\$templateName"
+
+#Automation AccountID for Runbook based tasks in Recovery Plan
+$automationAccountId = "/subscriptions/3d3c613c-3828-4c8d-bc51-8871f888c18e/resourceGroups/arav-rg-aue-hubmgmt-bicep-01/providers/Microsoft.Automation/automationAccounts/arav-aac-aue-bicep-01"
 
 #Import Base Param file
 $recoveryPlanfile = ConvertFrom-Json -inputobject ( Get-Content -Raw -Path $baseTemplate )

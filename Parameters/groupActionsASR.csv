@@ -1,0 +1,3 @@
+recoveryPlan|group|startAction|startActionName|startActionDescription|endAction|endActionName|endActionDescription|failoverType|failoverDirections
+Gold|1|Manual|Manual|Test Action Description|Manual|Manual|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
+Gold|2||||Runbook|TestASRRunbook|Test Action Description|UnplannedFailover,TestFailover|PrimaryToRecovery,RecoveryToPrimary
