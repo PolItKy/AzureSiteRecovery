@@ -21,6 +21,9 @@ https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Scripts/RecoveryP
 - Build the groups of VMs by referencing the Pre and Post actions in group actions CSV file. 
 - It is not mandatory to have pre and post actions for every group of machines. 
 
+Sample Group comprising single VM with pre and post actions. 
+
+![image](https://user-images.githubusercontent.com/86707819/140847823-d8090002-8823-4a31-a638-9185d1ae5c44.png)
 
 Associated workflow is here.
 
