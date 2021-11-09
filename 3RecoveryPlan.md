@@ -25,6 +25,8 @@ Sample Group comprising single VM with pre and post actions.
 
 ![image](https://user-images.githubusercontent.com/86707819/140847823-d8090002-8823-4a31-a638-9185d1ae5c44.png)
 
+![image](https://user-images.githubusercontent.com/86707819/140847957-df8108de-809e-457f-b257-0dd2e42dbdef.png)
+
 Associated workflow is here.
 
 [![ASR-RecoveryPlan](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml/badge.svg)](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml)
