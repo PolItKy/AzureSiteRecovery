@@ -17,7 +17,21 @@ Below Azure Powershell script serves as a wrapper which does the majority of the
 
 https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Scripts/EnableReplication.ps1
 
+# CSV file layout
+
+virtualMachinesDR.csv
+
+| **Column Name** | **Description** |
+|--|--|
+| vmName | Name of the Virtual Machine |
+| replicationPolicy | Name of the Replication Policy - Platinum,Gold,Silver,Bronze, NonProd depending upon RTO and RPO |
+| recoveryPlan | Name of Recovery Plan. Can be platform or App based. Recovery plan when created will be prefixed with "RecoveryPlan" for consistency  |
+| resourceGroup | Name of Resource Group |
+| group | Sequence to be used in failover and failback. Accepted values are 1,2,3 etc i.e 1 is first group to failover followed by 2 which is 2nd group to failover |
+
 ![image](https://user-images.githubusercontent.com/86707819/139073328-8eb64b4e-311f-41ca-8417-9ea4a728bf0c.png)
+
+# Github Workflow
 
 A github workflow to perform ASR onboarding. 
 
