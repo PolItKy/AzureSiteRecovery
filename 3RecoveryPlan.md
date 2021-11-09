@@ -26,7 +26,21 @@ Sample Group comprising single VM with pre and post actions.
 ![image](https://user-images.githubusercontent.com/86707819/140847823-d8090002-8823-4a31-a638-9185d1ae5c44.png)
 
 ![image](https://user-images.githubusercontent.com/86707819/140847957-df8108de-809e-457f-b257-0dd2e42dbdef.png)
+# CSV Layout
 
-Associated workflow is here.
+| Field | Description  |
+|--|--|
+| recoveryPlan | Name of Recovery Plan without "RecoveryPlan" prefix |
+| group | Group Number |
+| startAction | Start Action for the Group. Accepted values are Manual, Runbook  |
+| startActionName  | Name of Start Action |
+| startActionDescription | Description of Start Action |
+| endAction | End Action for the Group. Accepted values are Manual, Runbook |
+| endActionName | Name of End Action |
+| endActionDescription | Description of End Action |
+| failoverType| Type of Failover. Accepted value are TestFailover,UnplannedFailover |
+| failoverDirections| Direction of Failover. Accepted values are PrimaryToRecovery, RecoveryToPrimary |
+
+# Github Workflow
 
 [![ASR-RecoveryPlan](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml/badge.svg)](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml)
