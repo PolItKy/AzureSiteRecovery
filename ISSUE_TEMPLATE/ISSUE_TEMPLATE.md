@@ -9,3 +9,5 @@ A clear and concise description of what the bug is.
 Attach screenshots of errors faced 
 
 **Any Additional Information:**
+
+Add any additional details which can help the situation. 
