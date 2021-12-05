@@ -4,13 +4,13 @@ Among the many use cases for ASR, this repository deals with disaster recovery f
 
 It elaborates some of the common painpoints in configuring and executing ASR from a Infrastructure as Code perspective. 
 
-**Enabling ASR:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/1ConfigureSiteRecoveryVault.md
+**Enabling ASR:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Links/ConfigureSiteRecoveryVault.md
 
-**Enabling Replication:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/2EnableReplication.md
+**Enabling Replication:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Links/EnableReplication.md
 
-**Building Recovery Plan:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/3RecoveryPlan.md
+**Building Recovery Plan:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Links/RecoveryPlan.md
 
-**Execution of ASR:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/4SiteRecoveryExecution.md
+**Execution of ASR:** https://github.com/aravindsundaram/AzureSiteRecovery/blob/main/Links/SiteRecoveryExecution.md
 
 A brief about Folder heirarchy
 
