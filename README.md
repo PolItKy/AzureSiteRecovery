@@ -16,8 +16,7 @@ A brief about Folder heirarchy
 
 | Folders | Description |
 | --- | ----------- |
-| .github/Workflows | Workflows to deploy Landing Zones, Configure ASRs, Enable Replication, Create Recovery Plans and Execute ASR |
-| ADOPipelines | Azure Devops Pipelines to perform the tasks mentioned above.  |
+| .github/Workflows | Workflows to deploy Landing Zones, Configure ASRs, Enable Replication, Create Recovery Plans |
 | ARM | ARM template to configure ASR in Recovery Services Vault  |
 | Bicep | Bicep Modules and Code to configure ASR and deploy Landing Zones  |
 | Parameters | Parameters in format of CSV files for Enabling Replication and Creating Recovery Plans  |
