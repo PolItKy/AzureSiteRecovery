@@ -34,12 +34,7 @@ jobs:
 
       #Login to Azure
       - name: Azure Login
-        uses: Azure/login@v1
-        with:
-        # Create secret by AZURE_CREDENTIALS which is SPN used by Github. 
-         creds: ${{secrets.AZURE_CREDENTIALS}}
-         # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
-         enable-AzPSSession: true
+        uses: aravindsundaram/AzureSiteRecovery/.github/workflows/AzNewLogin.yml@v1
    
       - name: Azure PowerShell file script
         uses: Azure/powershell@v1
