@@ -41,6 +41,22 @@ Sample Group comprising single VM with pre and post actions.
 | failoverType| Type of Failover. Accepted value are TestFailover,UnplannedFailover |
 | failoverDirections| Direction of Failover. Accepted values are PrimaryToRecovery, RecoveryToPrimary |
 
+# Group Actions in Recovery Plans
+
+- Manual actions can be list of steps that needs to be performed in Azure or elsewhere before or after a groups of VMs are failed over or failed back.
+When the step is reached, the prompt to End user will need to be completed with necessary comments.
+
+- Runbook Actions can be runbooks of Automation account that needs be executed before or after a groups of VMs are failed over or failed back. We can execute scripts on the VMs specifically like Updating Config files, registry changes etc.
+
+A sample runbook to manipulate Recovery plan context and write output is used for demonstration purposes. This script has capability to handle RecoveryPlanContext which has the information of VMs failing over.
+
+![image](https://user-images.githubusercontent.com/86707819/145504796-0723f96b-94b5-469a-96d3-6182da922743.png)
+
+**Sample RecoveryPlanContext:**
+
+{"RecoveryPlanName":"RecoveryPlan-ASRDemo","FailoverType":"Test","FailoverDirection":"PrimaryToSecondary","GroupId":"Group2","VmMap":{"d8daf0e6-34a7-4608-b09d-6a3251fe5ac5":{"SubscriptionId":"3d3c613c-3828-4c8d-bc51-8871f888c18e","ResourceGroupName":"arav-rg-sea-asrdemo-net-01","CloudServiceName":null,"RoleName":"aravaueasr002-test","RecoveryPointId":"a53eea11-4e14-462a-b5ec-e18e455dada5","RecoveryPointTime":"\/Date(1636597591395)\/"}}}
+
+
 # Github Workflow
 
 [![ASR-RecoveryPlan](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml/badge.svg)](https://github.com/aravindsundaram/AzureSiteRecovery/actions/workflows/ASR-RecoveryPlan.yml)
