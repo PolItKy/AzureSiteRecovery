@@ -25,8 +25,8 @@ A brief about Folder heirarchy
 | Templates | Recovery plan base template which will be used to programatically build and Create recovery plan 
 
 **Some of the references**
-https://docs.microsoft.com/en-us/azure/site-recovery/
-https://adamtheautomator.com/azure-disaster-recovery/
-https://github.com/Huachao/azure-content/blob/master/articles/site-recovery/site-recovery-deploy-with-powershell-resource-manager.md
-http://terenceluk.blogspot.com/2021/07/automating-azure-site-recovery-recovery.html
-https://docs.microsoft.com/en-us/azure/templates/microsoft.recoveryservices/vaults?tabs=bicep
+- https://docs.microsoft.com/en-us/azure/site-recovery/
+- https://adamtheautomator.com/azure-disaster-recovery/
+- https://github.com/Huachao/azure-content/blob/master/articles/site-recovery/site-recovery-deploy-with-powershell-resource-manager.md
+- http://terenceluk.blogspot.com/2021/07/automating-azure-site-recovery-recovery.html
+- https://docs.microsoft.com/en-us/azure/templates/microsoft.recoveryservices/vaults?tabs=bicep
