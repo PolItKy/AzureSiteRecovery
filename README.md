@@ -19,5 +19,7 @@ A brief about Folder heirarchy
 | .github/Workflows | Workflows to deploy Landing Zones, Configure ASRs, Enable Replication, Create Recovery Plans |
 | ARM | ARM template to configure ASR in Recovery Services Vault  |
 | Bicep | Bicep Modules and Code to configure ASR and deploy Landing Zones  |
+| Links | Read Me links 
 | Parameters | Parameters in format of CSV files for Enabling Replication and Creating Recovery Plans  |
 | Scripts | Azure Powershell scripts which is used for Enabling replication, Creating Recovery Plans and to Execute ASR |
+| Templates | Recovery plan base template which will be used to programatically build and Create recovery plan 
